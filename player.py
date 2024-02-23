@@ -8,8 +8,8 @@ class Player(pygame.sprite.Sprite):
         # always need this for any kind of sprite
         self.image = pygame.image.load('graphics/player.png').convert_alpha()
         self.rect = self.image.get_rect(topleft=pos)
-        self.hitbox = self.rect.inflate(0, -26)
-
+        self.hitbox = self.rect
+        self.move_counter = 0
         self.direction = pygame.math.Vector2()
         # self.status = "stationary"
         self.speed = 5
@@ -18,6 +18,7 @@ class Player(pygame.sprite.Sprite):
 
     def input(self):
         keys = pygame.key.get_pressed()
+        self.direction = pygame.math.Vector2(0, 0)
 
         if keys[pygame.K_UP]:
             self.direction.y = -1
@@ -25,9 +26,6 @@ class Player(pygame.sprite.Sprite):
         elif keys[pygame.K_DOWN]:
             self.direction.y = 1
             # self.status = down
-        else:
-            self.direction.y = 0
-            # self.status = stationary
 
         if keys[pygame.K_RIGHT]:
             self.direction.x = 1
@@ -35,19 +33,30 @@ class Player(pygame.sprite.Sprite):
         elif keys[pygame.K_LEFT]:
             self.direction.x = -1
             # self.status = left
-        else:
-            self.direction.x = 0
+        # If both horizontal and vertical directions are pressed, prioritize one
+        if self.direction.x != 0 and self.direction.y != 0:
+            # Prioritize horizontal movement
+            if abs(self.direction.x) > abs(self.direction.y):
+                self.direction.y = 0
+            # Prioritize vertical movement
+            else:
+                self.direction.x = 0
 
     def move(self, speed):
-        # check if vector has a length for diagonal speed
-        if self.direction.magnitude() != 0:
-            self.direction = self.direction.normalize()
 
-        self.hitbox.x += self.direction.x * speed
-        self.collision('horizontal')
-        self.hitbox.y += self.direction.y * speed
-        self.collision('vertical')
-        self.rect.center = self.hitbox.center
+        # Move counter can be BPM of Track
+        if self.move_counter >= 25:
+            # Every x frames, allow movement
+            # Multiply hitbox x and y by the direction given from
+            # input and the TILESIZE (in this case 64)
+            self.hitbox.x += self.direction.x * TILESIZE
+            self.collision('horizontal')
+            self.hitbox.y += self.direction.y * TILESIZE
+            self.collision('vertical')
+            self.rect.center = self.hitbox.center
+            self.move_counter = 0
+        else:
+            self.move_counter += 1
 
     def collision(self, direction):
         if direction == 'horizontal':
