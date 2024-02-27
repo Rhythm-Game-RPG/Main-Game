@@ -3,6 +3,7 @@ from settings import *
 from tile import Tile
 from player import Player
 from debug import debug
+from pause import Pause
 
 
 class Level:
@@ -10,12 +11,15 @@ class Level:
 
         # get the display surface
         self.display_surface = pygame.display.get_surface()
+        self.game_paused = False
         # sprite group set up
         self.visible_sprites = YSortCameraGroup()
         self.obstacles_sprites = pygame.sprite.Group()
 
         # sprite set up
         self.create_map()
+
+        self.pause = Pause(self.player)
 
     def create_map(self):
         for row_index, row in enumerate(WORLD_MAP):
@@ -27,11 +31,17 @@ class Level:
                 if col == 'p':
                     self.player = Player((x, y), [self.visible_sprites], self.obstacles_sprites)
 
+    def toggle_menu(self):
+        self.game_paused = not self.game_paused
+
     def run(self):
-        # update and draw the game
-        self.visible_sprites.custom_draw(self.player)
-        self.visible_sprites.update()
-        debug(self.player.direction)
+        if self.game_paused:
+            self.pause.display()
+            # display pause menu
+        else:
+            self.visible_sprites.custom_draw(self.player)
+            self.visible_sprites.update()
+            debug(self.player.pos)
 
 
 class YSortCameraGroup(pygame.sprite.Group):
