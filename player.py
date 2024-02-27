@@ -1,20 +1,31 @@
 import pygame
 from settings import *
-
+from support import import_folder
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos, groups, obstacle_sprites):
         super().__init__(groups)
         # always need this for any kind of sprite
-        self.image = pygame.image.load('graphics/player.png').convert_alpha()
+        self.image = pygame.image.load('graphics/player/right_idle/right_idle.png').convert_alpha()
         self.rect = self.image.get_rect(topleft=pos)
+        self.pos = pos
         self.hitbox = self.rect
         self.move_counter = 0
         self.direction = pygame.math.Vector2()
-        # self.status = "stationary"
+        self.status = "stationary"
         self.speed = 5
-
         self.obstacle_sprites = obstacle_sprites
+
+        # graphics setup
+        self.import_player_assets()
+
+    def import_player_assets(self):
+        character_path = "graphics/player/"
+        self.animations = {'up': [], 'down': [], 'left': [], 'right': [],
+                           'right_idle': [], 'left_idle': [], 'up_idle': [], 'down_idle': [],
+                           'right_attack': [], 'left_attack': [], 'up_attack': [], 'down_attack': []}
+        for animation in self.animations.keys():
+            full_path = character_path + animation
 
     def input(self):
         keys = pygame.key.get_pressed()
@@ -55,6 +66,7 @@ class Player(pygame.sprite.Sprite):
             self.collision('vertical')
             self.rect.center = self.hitbox.center
             self.move_counter = 0
+            self.pos = (round(self.hitbox.x / 64), round(self.hitbox.y / 64))
         else:
             self.move_counter += 1
 
