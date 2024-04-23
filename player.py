@@ -1,12 +1,12 @@
 import pygame
 from settings import *
-#from support import import_folder
+from support import import_folder
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos, groups, obstacle_sprites):
         super().__init__(groups)
         # always need this for any kind of sprite
-        self.image = pygame.image.load('player_left.png').convert_alpha()
+        self.image = pygame.image.load('graphics/player/right_idle/right_idle.png').convert_alpha()
         self.rect = self.image.get_rect(topleft=pos)
         self.pos = pos
         self.hitbox = self.rect
@@ -15,8 +15,6 @@ class Player(pygame.sprite.Sprite):
         self.status = "stationary"
         self.speed = 5
         self.obstacle_sprites = obstacle_sprites
-        self.hp = 10
-        self.atk = 5
 
         # graphics setup
         self.import_player_assets()

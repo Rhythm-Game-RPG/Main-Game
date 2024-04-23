@@ -8,4 +8,4 @@ class Pause:
         self.player = player
 
     def display(self):
-        self.display_surface.blit(ps_img, (0, 0))
+        self.display_surface.fill('black')
