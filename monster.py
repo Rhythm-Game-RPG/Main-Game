@@ -17,6 +17,8 @@ class Monster(pygame.sprite.Sprite):
         self.speed = 5
         self.obstacle_sprites = obstacle_sprites
         self.player = player
+        self.max_hp = 1
+        self.atk = 2
 
         # graphics setup
         self.import_player_assets()
@@ -81,6 +83,11 @@ class Monster(pygame.sprite.Sprite):
                         self.hitbox.right = sprite.hitbox.left
                     if self.direction.x < 0:  # moving left
                         self.hitbox.left = sprite.hitbox.right
+            if self.player.hitbox.colliderect(self.hitbox):
+                if self.direction.x > 0:  # moving right
+                    self.hitbox.right = self.player.hitbox.left
+                if self.direction.x < 0:  # moving left
+                    self.hitbox.left = self.player.hitbox.right
         if direction == 'vertical':
             for sprite in self.obstacle_sprites:
                 if sprite.hitbox.colliderect(self.hitbox):
@@ -88,6 +95,11 @@ class Monster(pygame.sprite.Sprite):
                         self.hitbox.top = sprite.hitbox.bottom
                     if self.direction.y > 0:  # moving down
                         self.hitbox.bottom = sprite.hitbox.top
+            if self.player.hitbox.colliderect(self.hitbox):
+                if self.direction.y < 0:  # moving right
+                    self.hitbox.top = self.player.hitbox.bottom
+                if self.direction.y > 0:  # moving left
+                    self.hitbox.bottom = self.player.hitbox.top
 
     def update(self):
         self.pathfind()

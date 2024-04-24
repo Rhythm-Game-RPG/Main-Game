@@ -17,6 +17,7 @@ class Level:
         self.visible_sprites = YSortCameraGroup()
         self.obstacles_sprites = pygame.sprite.Group()
 
+        self.monster_list = []
         # sprite set up
         self.create_map()
 
@@ -30,14 +31,14 @@ class Level:
                 if col == 'x':
                     Tile((x, y), [self.visible_sprites, self.obstacles_sprites])
                 if col == 'p':
-                    self.player = Player((x, y), [self.visible_sprites], self.obstacles_sprites)
+                    self.player = Player((x, y), [self.visible_sprites], self.obstacles_sprites, self.monster_list)
         for row_index, row in enumerate(WORLD_MAP):
             for col_index, col in enumerate(row):
                 x = col_index * TILESIZE
                 y = row_index * TILESIZE
                 if col == 's':
-                    self.monster = Monster((x, y), [self.visible_sprites], self.obstacles_sprites, self.player)
-
+                    self.monster = (Monster((x, y), [self.visible_sprites], self.obstacles_sprites, self.player))
+                    self.player.monster_list.append(self.monster)
     def toggle_menu(self):
         self.game_paused = not self.game_paused
 
@@ -49,7 +50,6 @@ class Level:
             self.visible_sprites.custom_draw(self.player)
             self.visible_sprites.update()
             self.monster.update()
-            debug(self.player.move_counter)
 
 
 class YSortCameraGroup(pygame.sprite.Group):
