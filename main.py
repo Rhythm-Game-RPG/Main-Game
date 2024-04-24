@@ -49,7 +49,7 @@ class Game:
 
     def display_ui(self):
         for i in range(self.level.player.max_hp):
-            img = pygame.image.load("Heart-Empty.png" if i >= self.level.player.max_hp else "Heart.png")
+            img = pygame.image.load("Heart-Empty.png" if i >= self.level.player.curr_hp else "Heart.png")
             img = pygame.transform.scale(img, (50, 50))
             self.screen.blit(img, (i * 50 + HEIGHT / 4 - self.level.player.max_hp * 50, 20))
 

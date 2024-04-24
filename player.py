@@ -108,5 +108,6 @@ class Player(pygame.sprite.Sprite):
                         self.hitbox.bottom = monster.hitbox.top
 
     def update(self):
+        debug(self.curr_hp, 10, 10)
         self.input()
         self.move(self.speed)
