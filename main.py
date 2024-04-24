@@ -18,6 +18,7 @@ class StartMenu:
             text_rect = text.get_rect(center=(WIDTH // 2, HEIGHT // 2 + i * 50))
             screen.blit(text, text_rect)
 
+
     def handle_event(self, event):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_DOWN:
@@ -46,6 +47,19 @@ class Game:
         self.level = Level()
         self.menu = StartMenu()
 
+    def display_ui(self):
+        for i in range(self.level.player.max_hp):
+            img = pygame.image.load("Heart-Empty.png" if i >= self.level.player.max_hp else "Heart.png")
+            img = pygame.transform.scale(img, (50, 50))
+            self.screen.blit(img, (i * 50 + HEIGHT / 4 - self.level.player.max_hp * 50, 20))
+
+    # Monster HP Display
+    #def display_mon_ui(self):
+    #    for i in range(self.level.monster.max_hp):
+    #        img = pygame.image.load("Heart-Empty.png" if i >= self.level.monster.max_hp else "Heart.png")
+    #        img = pygame.transform.scale(img, (20, 20))
+    #        self.screen.blit(img, (i * 50 + self.level.monster.pos[0] + self.level.monster.pos[1], 100))
+
     def run(self):
         while True:
             for event in pygame.event.get():
@@ -70,6 +84,7 @@ class Game:
                 self.menu.draw(self.screen)
             else:
                 self.level.run()
+                self.display_ui()
 
             pygame.display.update()
             self.clock.tick(FPS)

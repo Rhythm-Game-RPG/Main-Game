@@ -1,9 +1,13 @@
 import pygame
+
+import level
 from settings import *
+from debug import *
+from level import *
 #from support import import_folder
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, pos, groups, obstacle_sprites):
+    def __init__(self, pos, groups, obstacle_sprites, monster_list):
         super().__init__(groups)
         # always need this for any kind of sprite
         self.image = pygame.image.load('player_left.png').convert_alpha()
@@ -15,8 +19,10 @@ class Player(pygame.sprite.Sprite):
         self.status = "stationary"
         self.speed = 5
         self.obstacle_sprites = obstacle_sprites
-        self.hp = 10
-        self.atk = 5
+        self.max_hp = 3
+        self.curr_hp = 3
+        self.atk = 2
+        self.monster_list = monster_list.copy()
 
         # graphics setup
         self.import_player_assets()
@@ -62,6 +68,7 @@ class Player(pygame.sprite.Sprite):
             # Every x frames, allow movement
             # Multiply hitbox x and y by the direction given from
             # input and the TILESIZE (in this case 64)
+
             self.hitbox.x += self.direction.x * TILESIZE
             self.collision('horizontal')
             self.hitbox.y += self.direction.y * TILESIZE
@@ -80,6 +87,12 @@ class Player(pygame.sprite.Sprite):
                         self.hitbox.right = sprite.hitbox.left
                     if self.direction.x < 0:  # moving left
                         self.hitbox.left = sprite.hitbox.right
+            for monster in self.monster_list:
+                if monster.hitbox.colliderect(self.hitbox):
+                    if self.direction.x > 0:  # moving right
+                        self.hitbox.right = monster.hitbox.left
+                    if self.direction.x < 0:  # moving left
+                        self.hitbox.left = monster.hitbox.right
         if direction == 'vertical':
             for sprite in self.obstacle_sprites:
                 if sprite.hitbox.colliderect(self.hitbox):
@@ -87,6 +100,12 @@ class Player(pygame.sprite.Sprite):
                         self.hitbox.top = sprite.hitbox.bottom
                     if self.direction.y > 0:  # moving down
                         self.hitbox.bottom = sprite.hitbox.top
+            for monster in self.monster_list:
+                if monster.hitbox.colliderect(self.hitbox):
+                    if self.direction.y < 0:  # moving up
+                        self.hitbox.top = monster.hitbox.bottom
+                    if self.direction.y > 0:  # moving down
+                        self.hitbox.bottom = monster.hitbox.top
 
     def update(self):
         self.input()
