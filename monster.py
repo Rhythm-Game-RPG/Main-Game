@@ -17,8 +17,10 @@ class Monster(pygame.sprite.Sprite):
         self.status = "stationary"
         self.speed = 5
         self.obstacle_sprites = obstacle_sprites
+        self.alive = True
         self.player = player
         self.max_hp = 1
+        self.curr_hp = 1
         self.atk = 1
 
         # graphics setup
@@ -31,10 +33,6 @@ class Monster(pygame.sprite.Sprite):
                            'right_attack': [], 'left_attack': [], 'up_attack': [], 'down_attack': []}
         for animation in self.animations.keys():
             full_path = character_path + animation
-
-    def attack(self):
-        self.player.curr_hp -= self.atk
-        return
 
     def pathfind(self):
         self.direction = pygame.math.Vector2(0, 0)
@@ -117,6 +115,15 @@ class Monster(pygame.sprite.Sprite):
                 if self.direction.y > 0:  # moving left
                     self.hitbox.bottom = self.player.hitbox.top
 
+    def checkStatus(self):
+        if self.curr_hp < 1:
+            self.alive = False
+            self.hitbox.x += 100 * TILESIZE
+            self.hitbox.y += 100 * TILESIZE
+            self.pos = (round(self.hitbox.x / 64), round(self.hitbox.y / 64))
+            self.rect.center = self.hitbox.center
+
     def update(self):
         self.pathfind()
         self.move(self.speed)
+        self.checkStatus()

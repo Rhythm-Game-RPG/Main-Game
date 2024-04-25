@@ -50,6 +50,7 @@ class Level:
             self.visible_sprites.custom_draw(self.player)
             self.visible_sprites.update()
             self.monster.update()
+            debug(self.monster_list[0].curr_hp)
 
 
 class YSortCameraGroup(pygame.sprite.Group):
