@@ -1,6 +1,7 @@
 import pygame
 import sys
 from level import Level
+from player import *
 from settings import *
 
 
@@ -89,16 +90,8 @@ class Game:
                 self.screen.blit(bg_text, (0, 0))
                 self.menu.draw(self.screen)
             else:
-                # if self.level = 0:
-                    # self.level.run()
-                    # self.display_ui()
-                # elif self.level = 1:
-                    # self.level1.run()
-                    # self.display_ui()
-                # etc
                 self.level.run()
                 self.display_ui()
-
             pygame.display.update()
             self.clock.tick(FPS)
 

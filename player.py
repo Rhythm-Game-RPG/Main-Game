@@ -23,6 +23,7 @@ class Player(pygame.sprite.Sprite):
         self.curr_hp = 3
         self.atk = 2
         self.monster_list = monster_list
+        self.didKill = False
 
         # graphics setup
         self.import_player_assets()
@@ -72,10 +73,12 @@ class Player(pygame.sprite.Sprite):
                 if ((self.pos[0] + self.direction.x) == m.pos[0]) and (self.pos[1] == m.pos[1]):
                     m.curr_hp -= self.atk
                     self.move_counter = 0
+                    self.didKill = True
                     return
                 if (self.pos[0] == m.pos[0]) and ((self.pos[1] + self.direction.y) == m.pos[1]):
                     m.curr_hp -= self.atk
                     self.move_counter = 0
+                    self.didKill = True
                     return
             self.hitbox.x += self.direction.x * TILESIZE
             self.collision('horizontal')
