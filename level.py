@@ -5,6 +5,8 @@ from player import Player
 from debug import debug
 from pause import Pause
 from monster import Monster
+from slime import Slime
+from skeleton import Skeleton
 
 
 class Level:
@@ -37,8 +39,12 @@ class Level:
                 x = col_index * TILESIZE
                 y = row_index * TILESIZE
                 if col == 's':
-                    self.monster = (Monster((x, y), [self.visible_sprites], self.obstacles_sprites, self.player))
+                    self.monster = (Slime((x, y), [self.visible_sprites], self.obstacles_sprites, self.player))
                     self.player.monster_list.append(self.monster)
+                if col == 'k':
+                    self.monster = (Skeleton((x, y), [self.visible_sprites], self.obstacles_sprites, self.player))
+                    self.player.monster_list.append(self.monster)
+
     def toggle_menu(self):
         self.game_paused = not self.game_paused
 
