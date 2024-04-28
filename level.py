@@ -26,7 +26,7 @@ class Level:
         self.pause = Pause(self.player)
 
     def create_map(self):
-        for row_index, row in enumerate(WORLD_MAP):
+        for row_index, row in enumerate(LEVEL1):
             for col_index, col in enumerate(row):
                 x = col_index * TILESIZE
                 y = row_index * TILESIZE
@@ -34,7 +34,7 @@ class Level:
                     Tile((x, y), [self.visible_sprites, self.obstacles_sprites])
                 if col == 'p':
                     self.player = Player((x, y), [self.visible_sprites], self.obstacles_sprites, self.monster_list)
-        for row_index, row in enumerate(WORLD_MAP):
+        for row_index, row in enumerate(LEVEL1):
             for col_index, col in enumerate(row):
                 x = col_index * TILESIZE
                 y = row_index * TILESIZE

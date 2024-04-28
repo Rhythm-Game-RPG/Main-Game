@@ -38,6 +38,7 @@ class Game:
         pygame.init()
         # Template Music
         pygame.mixer.init()
+        self.scroll = 0
         music = pygame.mixer.music.load('funk.ogg')
         pygame.mixer.music.play(-1)
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -80,9 +81,21 @@ class Game:
             self.screen.fill('white')
 
             if self.menu.active:
-                self.screen.blit(bg_image, (0, 0))
+                for i in range(0, tiles):
+                    self.screen.blit(bg_image, (i * bg_width + self.scroll, 0))
+                self.scroll -= 1
+                if abs(self.scroll) > bg_width:
+                    self.scroll = 0
+                self.screen.blit(bg_text, (0, 0))
                 self.menu.draw(self.screen)
             else:
+                # if self.level = 0:
+                    # self.level.run()
+                    # self.display_ui()
+                # elif self.level = 1:
+                    # self.level1.run()
+                    # self.display_ui()
+                # etc
                 self.level.run()
                 self.display_ui()
 
