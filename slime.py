@@ -2,10 +2,11 @@ from contextlib import AsyncExitStack
 import pygame
 from settings import *
 from player import Player
+from monster import Monster
 
-class Monster(pygame.sprite.Sprite):
+class Slime(Monster):
     def __init__(self, pos, groups, obstacle_sprites, player):
-        super().__init__(groups)
+        super().__init__(pos, groups, obstacle_sprites, player)
         # always need this for any kind of sprite
         self.image = pygame.image.load('slime.png').convert_alpha()
         self.rect = self.image.get_rect(topleft=pos)
@@ -19,8 +20,8 @@ class Monster(pygame.sprite.Sprite):
         self.obstacle_sprites = obstacle_sprites
         self.alive = True
         self.player = player
-        self.max_hp = 1
-        self.curr_hp = 1
+        self.max_hp = 2
+        self.curr_hp = 2
         self.atk = 1
 
         # graphics setup
@@ -38,7 +39,11 @@ class Monster(pygame.sprite.Sprite):
         self.direction = pygame.math.Vector2(0, 0)
 
         #notes
-        #function for dictating movement goes here
+        #The slime bounces around in a circle and attacks only if the player steps
+        #in its way
+        #it uses the patrol field to dictate which direction it moves
+        #which counts up in move() every time it take a move action
+        #it does not count up when it makes an attack
 
         match self.patrol:
             case 0:
@@ -54,19 +59,12 @@ class Monster(pygame.sprite.Sprite):
 
     def move(self, speed):
 
-        #This function enacts movement and controls the logic for attacks.
-        #If the player is standing adjacent and in the direction the monster is moving
-        #then the monster will attack
-
         # Move counter can be BPM of Track
-        # Every x frames, allow movement
-        # Multiply hitbox x and y by the direction given from
-        # input and the TILESIZE (in this case 64)
         if self.move_counter >= 100:
-            #Tag assumes attack is not possible
             noAttack = True
-            #First check if attack is possible on the X or Y plane
-            #If attack is possible, the monster attacks, we flip noAttack to false, and skip movement
+            # Every x frames, allow movement
+            # Multiply hitbox x and y by the direction given from
+            # input and the TILESIZE (in this case 64)
             if self.direction.y == 0:
                 if (self.player.pos[0] == (self.pos[0] + self.direction.x)) and (self.player.pos[1] == self.pos[1]):
                     self.player.curr_hp -= self.atk
@@ -130,3 +128,4 @@ class Monster(pygame.sprite.Sprite):
         self.pathfind()
         self.move(self.speed)
         self.checkStatus()
+
