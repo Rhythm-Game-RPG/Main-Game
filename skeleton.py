@@ -16,6 +16,8 @@ class Skeleton(Monster):
         self.patrol = 0
         self.direction = pygame.math.Vector2()
         self.status = "patrol"
+        self.patrol_length = 6
+        self.detect_range = 6
         self.speed = 5
         self.obstacle_sprites = obstacle_sprites
         self.alive = True
@@ -35,48 +37,92 @@ class Skeleton(Monster):
         for animation in self.animations.keys():
             full_path = character_path + animation
 
-    def pathfind(self):
+    def patrol_path(self):
         self.direction = pygame.math.Vector2(0, 0)
-
+        
         #notes
-        #The slime bounces around in a circle and attacks only if the player steps
-        #in its way
-        #it uses the patrol field to dictate which direction it moves
-        #which counts up in move() every time it take a move action
-        #it does not count up when it makes an attack
+        #The skeleton patrols until the player enters a space
+        #that is within N horizontal and vertical spaces
+        #then it switches to pursuit
+        if(self.status == "patrol"):
+            match self.patrol:
+                case 0:
+                    self.direction.y = -1
+                case 1:
+                    self.direction.x = 1
+                case 2:
+                    self.direction.x = 1
+                case 3:
+                    self.direction.y = 1
+                case 4:
+                    self.direction.x = -1
+                case 5:
+                    self.direction.x = -1
+        if self.status == "patrol":
+            if (abs(self.player.pos[0] - self.pos[0]) <= self.detect_range) and (abs(self.player.pos[1] - self.pos[1]) <= self.detect_range):
+                self.status = "pursue"
+        elif (self.status == "pursue") or (self.status == "moveX") or (self.status == "moveY"):
+            if (abs(self.player.pos[0] - self.pos[0]) > self.detect_range) or (abs(self.player.pos[1] - self.pos[1]) > self.detect_range):
+                self.status = "patrol"
 
-        match self.patrol:
-            case 0:
-                self.direction.y = -1
-            case 1:
+    def pursue(self):
+        self.direction = pygame.math.Vector2(0, 0)
+        if self.status == "moveX":
+            if self.player.pos[0] == self.pos[0]:
+                self.status == "moveY"
+                if self.player.pos[1] > self.pos[1]:
+                    self.direction.y = 1
+                else:
+                    self.direction.y = -1
+            elif self.player.pos[0] > self.pos[0]:
                 self.direction.x = 1
-            case 2:
-                self.direction.y = 1
-            case 3:
+            else:
                 self.direction.x = -1
-        
-        
+        elif self.status == "moveY":
+            if self.player.pos[1] == self.pos[1]:
+                self.status == "moveY"
+                if self.player.pos[0] > self.pos[0]:
+                    self.direction.x = 1
+                else:
+                    self.direction.x = -1
+            elif self.player.pos[1] > self.pos[1]:
+                self.direction.y = 1
+            else:
+                self.direction.y = -1
+        elif self.status == "pursue":
+            if abs(self.player.pos[0] - self.pos[0]) <= abs(self.player.pos[1] - self.pos[1]):
+                self.status = "moveX"
+            else:
+                self.status = "moveY"
 
     def move(self, speed):
 
         # Move counter can be BPM of Track
-        if self.move_counter >= 100:
+        if self.move_counter >= 50:
             noAttack = True
             # Every x frames, allow movement
             # Multiply hitbox x and y by the direction given from
             # input and the TILESIZE (in this case 64)
             if self.direction.y == 0:
                 if (self.player.pos[0] == (self.pos[0] + self.direction.x)) and (self.player.pos[1] == self.pos[1]):
-                    self.player.curr_hp -= self.atk
-                    noAttack = False
+                    if self.status == "idle":
+                        self.player.curr_hp -= self.atk
+                        noAttack = False
+                        self.status = "pursue"
+                    else:
+                        self.status = "idle"
                 else:
                     self.hitbox.x += self.direction.x * TILESIZE
                     self.collision('horizontal')
                     self.rect.center = self.hitbox.center
             if self.direction.x == 0:
                 if (self.player.pos[0] == self.pos[0]) and (self.player.pos[1] == (self.pos[1] + self.direction.y)):
-                    self.player.curr_hp -= self.atk
-                    noAttack = False
+                    if self.status == "idle":
+                        self.player.curr_hp -= self.atk
+                        noAttack = False
+                        self.status = "pursue"
+                    else:
+                        self.status = "idle"
                 else:
                     self.hitbox.y += self.direction.y * TILESIZE
                     self.collision('vertical')
@@ -85,7 +131,7 @@ class Skeleton(Monster):
             if (noAttack):
                 self.pos = (round(self.hitbox.x / 64), round(self.hitbox.y / 64))
                 self.patrol += 1
-                if (self.patrol == 4):
+                if (self.patrol == self.patrol_length):
                     self.patrol = 0
         else:
             self.move_counter += 1
@@ -125,7 +171,10 @@ class Skeleton(Monster):
             self.rect.center = self.hitbox.center
 
     def update(self):
-        self.pathfind()
+        if self.status != "idle":
+            self.patrol_path()
+            if (self.status == "pursue") or (self.status == "moveX") or (self.status == "moveY"):
+                self.pursue()
         self.move(self.speed)
         self.checkStatus()
 
