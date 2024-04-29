@@ -7,6 +7,7 @@ from pause import Pause
 from monster import Monster
 from slime import Slime
 from skeleton import Skeleton
+from bat import Bat
 
 
 class Level:
@@ -43,6 +44,9 @@ class Level:
                     self.player.monster_list.append(self.monster)
                 if col == 'k':
                     self.monster = (Skeleton((x, y), [self.visible_sprites], self.obstacles_sprites, self.player))
+                    self.player.monster_list.append(self.monster)
+                if col == 'b':
+                    self.monster = (Bat((x, y), [self.visible_sprites], self.obstacles_sprites, self.player))
                     self.player.monster_list.append(self.monster)
 
     def toggle_menu(self):
