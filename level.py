@@ -28,11 +28,10 @@ class Level:
         pygame.mixer.init()
         self.m_val = 0
         self.create_map(self.counter)
-
+        self.monster_count = 0
         self.pause = Pause(self.player)
 
     def create_map(self, x):
-
         level = []
         if self.counter == 0:
             level = LEVEL1.copy()
@@ -63,14 +62,6 @@ class Level:
 
     def toggle_menu(self):
         self.game_paused = not self.game_paused
-
-    def change_music(self):
-        if self.counter == 0:
-            pygame.mixer.music.load('funky.ogg')
-            pygame.mixer.music.play(-1)
-        if self.counter == 1:
-            pygame.mixer.music.stop()
-            pygame.mixer.music.load('funk.ogg')
 
     def run(self):
         if self.game_paused:
