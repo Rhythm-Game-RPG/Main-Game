@@ -21,7 +21,7 @@ class Player(pygame.sprite.Sprite):
         self.obstacle_sprites = obstacle_sprites
         self.max_hp = 3
         self.curr_hp = 3
-        self.atk = 2
+        self.atk = 1
         self.monster_list = monster_list
         self.didKill = False
         self.BPM = 30

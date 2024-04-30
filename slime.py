@@ -15,7 +15,8 @@ class Slime(Monster):
         self.move_counter = 0
         self.patrol = 0
         self.direction = pygame.math.Vector2()
-        self.status = "stationary"
+        self.status = "patrol"
+        self.patrol_length = 4
         self.speed = 5
         self.obstacle_sprites = obstacle_sprites
         self.alive = True
@@ -85,7 +86,7 @@ class Slime(Monster):
             if (noAttack):
                 self.pos = (round(self.hitbox.x / 64), round(self.hitbox.y / 64))
                 self.patrol += 1
-                if (self.patrol == 4):
+                if (self.patrol == self.patrol_length):
                     self.patrol = 0
         else:
             self.move_counter += 1
