@@ -10,7 +10,7 @@ class Player(pygame.sprite.Sprite):
     def __init__(self, pos, groups, obstacle_sprites, monster_list):
         super().__init__(groups)
         # always need this for any kind of sprite
-        self.image = pygame.image.load('player_left.png').convert_alpha()
+        self.image = pygame.image.load('player_left_knife.png').convert_alpha()
         self.rect = self.image.get_rect(topleft=pos)
         self.pos = pos
         self.hitbox = self.rect
@@ -29,6 +29,7 @@ class Player(pygame.sprite.Sprite):
         self.kill_count = 0
         # graphics setup
         self.import_player_assets()
+        self.mon_killed = False
 
     def import_player_assets(self):
         character_path = "graphics/player/"
@@ -51,10 +52,10 @@ class Player(pygame.sprite.Sprite):
 
         if keys[pygame.K_RIGHT]:
             self.direction.x = 1
-            # self.status = right
+            self.status = "right"
         elif keys[pygame.K_LEFT]:
             self.direction.x = -1
-            # self.status = left
+            self.status = "left"
         # If both horizontal and vertical directions are pressed, prioritize one
         if self.direction.x != 0 and self.direction.y != 0:
             # Prioritize horizontal movement
@@ -66,6 +67,7 @@ class Player(pygame.sprite.Sprite):
 
     def move(self, speed):
         debug(self.move_counter, 10, 10)
+        self.mon_killed = False
         #
         if self.move_counter >= (self.BPM - 2)  and self.move_counter <= (self.BPM) and (self.direction.x != 0 or self.direction.y != 0):
             # Every x frames, allow movement
@@ -77,12 +79,14 @@ class Player(pygame.sprite.Sprite):
                     self.move_counter = 0
                     if m.curr_hp == 0:
                         self.kill_count += 1
+                        self.mon_killed = True
                         if self.kill_count == len(self.monster_list):
                             self.didKill = True
                     return
                 if (self.pos[0] == m.pos[0]) and ((self.pos[1] + self.direction.y) == m.pos[1]):
                     if m.curr_hp == 0:
                         self.kill_count += 1
+                        self.mon_killed = True
                         if self.kill_count == len(self.monster_list):
                             self.didKill = True
                     return
@@ -128,5 +132,11 @@ class Player(pygame.sprite.Sprite):
 
     def update(self):
         debug(self.curr_hp, 10, 10)
+        if self.status == "right":
+            self.image = pygame.image.load('player_knife.png').convert_alpha()
+            #self.rect = self.image.get_rect(topleft=self.pos)
+        elif self.status == "left":
+            self.image = pygame.image.load('player_left_knife.png').convert_alpha()
+            #self.rect = self.image.get_rect(topleft=self.pos)
         self.input()
         self.move(self.speed)

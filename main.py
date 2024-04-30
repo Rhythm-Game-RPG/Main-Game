@@ -1,5 +1,7 @@
 import pygame
 import sys
+
+import level
 from level import Level
 from player import *
 from settings import *
@@ -80,6 +82,7 @@ class BeatBar(pygame.sprite.Sprite):
 class Game:
     def __init__(self):
         pygame.init()
+        self.font = pygame.font.Font(None, 36)
         # Template Music
         self.sprites = []
         self.sprites.append(pygame.image.load('m_idle.png'))
@@ -104,8 +107,10 @@ class Game:
         self.val = 0
         self.level = Level()
         self.death_screen = DeathScreen()
-
+        self.save_hp = 0
         self.menu = StartMenu()
+        self.mon_left = len(self.level.player.monster_list)
+        self.k_count = self.level.player.kill_count
 
     def display_ui(self):
         pic = pygame.image.load("health-cover.png")
@@ -114,6 +119,8 @@ class Game:
             img = pygame.image.load("Heart-Empty.png" if i >= self.level.player.curr_hp else "Heart.png")
             img = pygame.transform.scale(img, (50, 50))
             self.screen.blit(img, (i * 50 + HEIGHT / 4 - 3 * 50, 20))
+        enemy_text = font.render(f'Monsters Left: {self.mon_left}', True, (0, 0, 0))
+        self.screen.blit(enemy_text, (enemy_text.get_width() / 2, 25))
 
 
     def BoogieBar(self):
@@ -157,7 +164,8 @@ class Game:
                             pygame.quit()
                             sys.exit()
 
-            self.screen.fill('white')
+            self.screen.fill('black'
+                             '')
 
             if self.menu.active:
                 if self.val == 0:
@@ -191,13 +199,17 @@ class Game:
                      #play level 4 track
                 self.level.run()
                 self.BoogieBar()
-                if self.level.player.curr_hp == 0:
+                if self.level.player.mon_killed:
+                    self.mon_left -= 1
+
+                if self.level.player.curr_hp <= 0:
                     self.unload_level()
                     pygame.mixer.music.stop()
                     pygame.mixer.music.load('death.ogg')
                     pygame.mixer.music.play(-1, 10, 5000)
                     self.death_screen.active = True
                     self.level = Level()
+
                 elif self.level.player.Win:
                         continue    # Win Logic
                 self.display_ui()
@@ -210,6 +222,7 @@ class Game:
         pygame.mixer.music.play(-1)
 
     def unload_level(self):
+        self.save_hp = self.level.player.curr_hp
         self.level.visible_sprites.empty()
         self.level.obstacles_sprites.empty()
         self.level.monster_list.clear()

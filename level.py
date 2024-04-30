@@ -3,6 +3,7 @@ import sys
 import pygame
 from settings import *
 from tile import Tile
+from floor import Floor
 from player import Player
 from debug import debug
 from pause import Pause
@@ -43,6 +44,13 @@ class Level:
             level = LEVEL3.copy()
         elif self.counter == 3:
             level = LEVEL4.copy()
+
+        for row_index, row in enumerate(level):
+            for col_index, col in enumerate(row):
+                x = col_index * TILESIZE
+                y = row_index * TILESIZE
+                if col != 'x':
+                    Floor((x, y), [self.visible_sprites])
         for row_index, row in enumerate(level):
             for col_index, col in enumerate(row):
                 x = col_index * TILESIZE
@@ -67,6 +75,7 @@ class Level:
                 if col == 'b':
                     self.monster = (Bat((x, y), [self.visible_sprites], self.obstacles_sprites, self.player))
                     self.player.monster_list.append(self.monster)
+
                 
 
     def toggle_menu(self):
@@ -78,7 +87,9 @@ class Level:
             # display pause menu
         else:
             if self.player.didKill:
+                var = self.player.curr_hp
                 self.next_level()
+                self.player.curr_hp = var
             self.visible_sprites.custom_draw(self.player)
             self.visible_sprites.update()
             self.monster.update()
