@@ -120,8 +120,7 @@ class Game:
             img = pygame.transform.scale(img, (50, 50))
             self.screen.blit(img, (i * 50 + HEIGHT / 4 - 3 * 50, 20))
         enemy_text = font.render(f'Monsters Left: {self.mon_left}', True, (0, 0, 0))
-        self.screen.blit(enemy_text, (enemy_text.get_width() / 2, 25))
-
+        self.screen.blit(enemy_text, (enemy_text.get_width() / 7, 85))
 
     def BoogieBar(self):
         if 5 <= self.level.player.move_counter < 10:
@@ -144,6 +143,7 @@ class Game:
             self.screen.blit(self.sprites[10], (200, 500))
         else:
             self.screen.blit(self.sprites[0], (200, 500))
+
     def run(self):
         while True:
             for event in pygame.event.get():
@@ -164,7 +164,7 @@ class Game:
                             pygame.quit()
                             sys.exit()
 
-            self.screen.fill('black'
+            self.screen.fill('white'
                              '')
 
             if self.menu.active:
@@ -183,20 +183,24 @@ class Game:
                 self.death_screen.draw(self.screen)
 
             else:
+
+                if self.level.moved_level:
+                    self.mon_left = len(self.level.player.monster_list)
+                    self.level.moved_level = False
                 if self.level.m_val == 0:
                     pygame.mixer.music.stop()
                     pygame.mixer.music.load('level1track.ogg')
-                    pygame.mixer.music.play()
+                    pygame.mixer.music.play(-1, 5)
                     self.level.m_val = -1
                 elif self.level.m_val == 1:
                     continue
-                        #play level 2 track
+                    # play level 2 track
                 elif self.level.m_val == 2:
                     continue
-                        #play level 3 track
+                    # play level 3 track
                 elif self.level.m_val == 3:
                     continue
-                     #play level 4 track
+                    # play level 4 track
                 self.level.run()
                 self.BoogieBar()
                 if self.level.player.mon_killed:
@@ -209,9 +213,10 @@ class Game:
                     pygame.mixer.music.play(-1, 10, 5000)
                     self.death_screen.active = True
                     self.level = Level()
+                    self.mon_left = len(self.level.player.monster_list)
 
                 elif self.level.player.Win:
-                        continue    # Win Logic
+                    continue  # Win Logic
                 self.display_ui()
             pygame.display.update()
             self.clock.tick(FPS)

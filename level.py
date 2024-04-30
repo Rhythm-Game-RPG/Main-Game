@@ -33,6 +33,7 @@ class Level:
         self.create_map(self.counter)
         self.monster_count = 0
         self.pause = Pause(self.player)
+        self.moved_level = False
 
     def create_map(self, x):
         level = []
@@ -76,8 +77,6 @@ class Level:
                     self.monster = (Bat((x, y), [self.visible_sprites], self.obstacles_sprites, self.player))
                     self.player.monster_list.append(self.monster)
 
-                
-
     def toggle_menu(self):
         self.game_paused = not self.game_paused
 
@@ -106,6 +105,9 @@ class Level:
         self.monster = None
         self.create_map(self.counter)
         self.player.didKill = False
+        self.moved_level = True
+
+
 class YSortCameraGroup(pygame.sprite.Group):
     def __init__(self):
         super().__init__()
