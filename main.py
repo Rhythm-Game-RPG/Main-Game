@@ -69,17 +69,7 @@ class DeathScreen:
 class BeatBar(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y):
         super().__init__()
-        self.sprites = []
-        self.sprites.append(pygame.image.load('m_idle.png'))
-        self.sprites.append(pygame.image.load('m_1.png'))
-        self.sprites.append(pygame.image.load('m_2.png'))
-        self.sprites.append(pygame.image.load('m_3.png'))
-        self.sprites.append(pygame.image.load('m_4.png'))
-        self.sprites.append(pygame.image.load('m_hit.png'))
-        self.sprites.append(pygame.image.load('m_5.png'))
-        self.sprites.append(pygame.image.load('m_6.png'))
-        self.sprites.append(pygame.image.load('m_7.png'))
-        self.sprites.append(pygame.image.load('m_8.png'))
+
         self.current_sprite = 0
         self.image = self.sprites[self.current_sprite]
 
@@ -91,7 +81,19 @@ class Game:
     def __init__(self):
         pygame.init()
         # Template Music
-
+        self.sprites = []
+        self.sprites.append(pygame.image.load('m_idle.png'))
+        self.sprites.append(pygame.image.load('m_1.png'))
+        self.sprites.append(pygame.image.load('m_2.png'))
+        self.sprites.append(pygame.image.load('m_3.png'))
+        self.sprites.append(pygame.image.load('m_4.png'))
+        self.sprites.append(pygame.image.load('m_hit.png'))
+        self.sprites.append(pygame.image.load('m_5.png'))
+        self.sprites.append(pygame.image.load('m_6.png'))
+        self.sprites.append(pygame.image.load('m_7.png'))
+        self.sprites.append(pygame.image.load('m_8.png'))
+        self.sprites.append(pygame.image.load('m_hit_1.png'))
+        self.sprites.append(pygame.image.load('m_hit_2.png'))
         self.scroll = 0
         pygame.mixer.init()
         music = pygame.mixer.music.load('menu.ogg')
@@ -114,13 +116,36 @@ class Game:
             self.screen.blit(img, (i * 50 + HEIGHT / 4 - 3 * 50, 20))
 
 
+    def BoogieBar(self):
+        if 0 <= self.level.player.move_counter < 3:
+            self.screen.blit(self.sprites[0], (200, 500))
+        elif 5 <= self.level.player.move_counter < 10:
+            self.screen.blit(self.sprites[1], (200, 500))
+        elif 10 <= self.level.player.move_counter < 15:
+            self.screen.blit(self.sprites[2], (200, 500))
+        elif 15 <= self.level.player.move_counter < 20:
+            self.screen.blit(self.sprites[3], (200, 500))
+        elif 20 <= self.level.player.move_counter < 25:
+            self.screen.blit(self.sprites[4], (200, 500))
+        elif 25 <= self.level.player.move_counter < 28:
+            self.screen.blit(self.sprites[5], (200, 500))
+        elif self.level.player.move_counter == 28:
+            # HIT!
+            self.screen.blit(self.sprites[10], (200, 500))
+        elif self.level.player.move_counter == 29:
+            # HIT!
+            self.screen.blit(self.sprites[11], (200, 500))
+        elif self.level.player.move_counter == 30:
+            # HIT!
+            self.screen.blit(self.sprites[10], (200, 500))
+        else:
+            self.screen.blit(self.sprites[0], (200, 500))
     def run(self):
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
-
                 if self.menu.active:
                     self.menu.handle_event(event)
                 elif self.death_screen.active:
@@ -168,6 +193,7 @@ class Game:
                     continue
                      #play level 4 track
                 self.level.run()
+                self.BoogieBar()
                 if self.level.player.curr_hp == 0:
                     self.unload_level()
                     pygame.mixer.music.stop()
