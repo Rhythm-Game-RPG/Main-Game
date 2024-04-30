@@ -117,18 +117,16 @@ class Game:
 
 
     def BoogieBar(self):
-        if 0 <= self.level.player.move_counter < 3:
-            self.screen.blit(self.sprites[0], (200, 500))
-        elif 5 <= self.level.player.move_counter < 10:
+        if 5 <= self.level.player.move_counter < 10:
             self.screen.blit(self.sprites[1], (200, 500))
         elif 10 <= self.level.player.move_counter < 15:
-            self.screen.blit(self.sprites[2], (200, 500))
-        elif 15 <= self.level.player.move_counter < 20:
             self.screen.blit(self.sprites[3], (200, 500))
+        elif 15 <= self.level.player.move_counter < 20:
+            self.screen.blit(self.sprites[6], (200, 500))
         elif 20 <= self.level.player.move_counter < 25:
-            self.screen.blit(self.sprites[4], (200, 500))
+            self.screen.blit(self.sprites[7], (200, 500))
         elif 25 <= self.level.player.move_counter < 28:
-            self.screen.blit(self.sprites[5], (200, 500))
+            self.screen.blit(self.sprites[9], (200, 500))
         elif self.level.player.move_counter == 28:
             # HIT!
             self.screen.blit(self.sprites[10], (200, 500))
@@ -136,7 +134,6 @@ class Game:
             # HIT!
             self.screen.blit(self.sprites[11], (200, 500))
         elif self.level.player.move_counter == 30:
-            # HIT!
             self.screen.blit(self.sprites[10], (200, 500))
         else:
             self.screen.blit(self.sprites[0], (200, 500))
