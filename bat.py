@@ -69,7 +69,7 @@ class Bat(Monster):
         self.direction = pygame.math.Vector2(0, 0)
         if self.status == "moveX":
             if self.player.pos[0] == self.pos[0]:
-                self.status == "moveY"
+                self.status = "moveY"
                 if self.player.pos[1] > self.pos[1]:
                     self.direction.y = 1
                 else:
@@ -80,7 +80,7 @@ class Bat(Monster):
                 self.direction.x = -1
         elif self.status == "moveY":
             if self.player.pos[1] == self.pos[1]:
-                self.status == "moveY"
+                self.status = "moveY"
                 if self.player.pos[0] > self.pos[0]:
                     self.direction.x = 1
                 else:
