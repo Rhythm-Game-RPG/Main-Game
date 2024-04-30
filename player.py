@@ -24,7 +24,9 @@ class Player(pygame.sprite.Sprite):
         self.atk = 1
         self.monster_list = monster_list
         self.didKill = False
-
+        self.BPM = 30
+        self.Win = False
+        self.kill_count = 0
         # graphics setup
         self.import_player_assets()
 
@@ -63,10 +65,9 @@ class Player(pygame.sprite.Sprite):
                 self.direction.x = 0
 
     def move(self, speed):
-
-        # Move counter can be BPM of Track
-        # The 25 needs to be the BPM Variable for each Track
-        if self.move_counter >= 31.5789 and (self.direction.x != 0 or self.direction.y != 0):
+        debug(self.move_counter, 10, 10)
+        #
+        if self.move_counter >= (self.BPM - 2)  and self.move_counter <= (self.BPM) and (self.direction.x != 0 or self.direction.y != 0):
             # Every x frames, allow movement
             # Multiply hitbox x and y by the direction given from
             # input and the TILESIZE (in this case 64)
@@ -74,12 +75,16 @@ class Player(pygame.sprite.Sprite):
                 if ((self.pos[0] + self.direction.x) == m.pos[0]) and (self.pos[1] == m.pos[1]):
                     m.curr_hp -= self.atk
                     self.move_counter = 0
-                    self.didKill = True
+                    if m.curr_hp == 0:
+                        self.kill_count += 1
+                        if self.kill_count == len(self.monster_list):
+                            self.didKill = True
                     return
                 if (self.pos[0] == m.pos[0]) and ((self.pos[1] + self.direction.y) == m.pos[1]):
-                    m.curr_hp -= self.atk
-                    self.move_counter = 0
-                    self.didKill = True
+                    if m.curr_hp == 0:
+                        self.kill_count += 1
+                        if self.kill_count == len(self.monster_list):
+                            self.didKill = True
                     return
             self.hitbox.x += self.direction.x * TILESIZE
             self.collision('horizontal')
@@ -88,6 +93,8 @@ class Player(pygame.sprite.Sprite):
             self.rect.center = self.hitbox.center
             self.move_counter = 0
             self.pos = (round(self.hitbox.x / 64), round(self.hitbox.y / 64))
+        elif self.move_counter > self.BPM:
+            self.move_counter = 0
         else:
             self.move_counter += 1
 
