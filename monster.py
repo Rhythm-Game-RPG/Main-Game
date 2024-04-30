@@ -14,7 +14,8 @@ class Monster(pygame.sprite.Sprite):
         self.move_counter = 0
         self.patrol = 0
         self.direction = pygame.math.Vector2()
-        self.status = "stationary"
+        self.status = "patrol"
+        self.patrol_length = 0
         self.speed = 5
         self.obstacle_sprites = obstacle_sprites
         self.alive = True

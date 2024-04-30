@@ -9,6 +9,8 @@ from pause import Pause
 from monster import Monster
 from slime import Slime
 from skeleton import Skeleton
+from bat import Bat
+from minotaur import Minotaur
 
 
 class Level:
@@ -52,12 +54,19 @@ class Level:
             for col_index, col in enumerate(row):
                 x = col_index * TILESIZE
                 y = row_index * TILESIZE
-                if col == 's':
-                    self.monster = (Slime((x, y), [self.visible_sprites], self.obstacles_sprites, self.player))
+                if col == 'm':
+                    self.monster = (Minotaur((x, y), [self.visible_sprites], self.obstacles_sprites, self.player))
                     self.player.monster_list.append(self.monster)
                 if col == 'k':
                     self.monster = (Skeleton((x, y), [self.visible_sprites], self.obstacles_sprites, self.player))
                     self.player.monster_list.append(self.monster)
+                if col == 's':
+                    self.monster = (Slime((x, y), [self.visible_sprites], self.obstacles_sprites, self.player))
+                    self.player.monster_list.append(self.monster)
+                if col == 'b':
+                    self.monster = (Bat((x, y), [self.visible_sprites], self.obstacles_sprites, self.player))
+                    self.player.monster_list.append(self.monster)
+                
 
     def toggle_menu(self):
         self.game_paused = not self.game_paused
@@ -82,7 +91,8 @@ class Level:
             self.visible_sprites.custom_draw(self.player)
             self.visible_sprites.update()
             self.monster.update()
-            debug(self.player.didKill)
+            debug(self.monster_list[0].status)
+
 
 
 class YSortCameraGroup(pygame.sprite.Group):

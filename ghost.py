@@ -4,11 +4,11 @@ from settings import *
 from player import Player
 from monster import Monster
 
-class Skeleton(Monster):
+class Bat(Monster):
     def __init__(self, pos, groups, obstacle_sprites, player):
         super().__init__(pos, groups, obstacle_sprites, player)
         # always need this for any kind of sprite
-        self.image = pygame.image.load('skeleton.png').convert_alpha()
+        self.image = pygame.image.load('ghost.png').convert_alpha()
         self.rect = self.image.get_rect(topleft=pos)
         self.pos = pos
         self.hitbox = self.rect
@@ -17,13 +17,13 @@ class Skeleton(Monster):
         self.direction = pygame.math.Vector2()
         self.status = "patrol"
         self.patrol_length = 6
-        self.detect_range = 6
+        self.detect_range = 3
         self.speed = 5
         self.obstacle_sprites = obstacle_sprites
-        self.alive = True
+        self.alive = False
         self.player = player
-        self.max_hp = 2
-        self.curr_hp = 2
+        self.max_hp = 1
+        self.curr_hp = 0
         self.atk = 1
 
         # graphics setup
@@ -49,13 +49,13 @@ class Skeleton(Monster):
                 case 0:
                     self.direction.y = -1
                 case 1:
-                    self.direction.x = 1
+                    self.direction.y = -1
                 case 2:
                     self.direction.x = 1
                 case 3:
                     self.direction.y = 1
                 case 4:
-                    self.direction.x = -1
+                    self.direction.y = 1
                 case 5:
                     self.direction.x = -1
         if self.status == "patrol":
@@ -80,7 +80,7 @@ class Skeleton(Monster):
                 self.direction.x = -1
         elif self.status == "moveY":
             if self.player.pos[1] == self.pos[1]:
-                self.status = "moveX"
+                self.status = "moveY"
                 if self.player.pos[0] > self.pos[0]:
                     self.direction.x = 1
                 else:
@@ -177,5 +177,4 @@ class Skeleton(Monster):
                 self.pursue()
         self.move(self.speed)
         self.checkStatus()
-
 
