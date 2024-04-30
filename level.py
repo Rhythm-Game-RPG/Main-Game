@@ -25,12 +25,14 @@ class Level:
         # sprite set up
 
         self.counter = 0
-
+        pygame.mixer.init()
+        self.m_val = 0
         self.create_map(self.counter)
 
         self.pause = Pause(self.player)
 
     def create_map(self, x):
+
         level = []
         if self.counter == 0:
             level = LEVEL1.copy()
@@ -62,29 +64,37 @@ class Level:
     def toggle_menu(self):
         self.game_paused = not self.game_paused
 
+    def change_music(self):
+        if self.counter == 0:
+            pygame.mixer.music.load('funky.ogg')
+            pygame.mixer.music.play(-1)
+        if self.counter == 1:
+            pygame.mixer.music.stop()
+            pygame.mixer.music.load('funk.ogg')
+
     def run(self):
         if self.game_paused:
             self.pause.display()
             # display pause menu
         else:
             if self.player.didKill:
-                self.counter += 1
-                if self.counter == 4:
-                    pygame.quit()
-                    sys.exit()
-                self.visible_sprites.empty()
-                self.obstacles_sprites.empty()
-                self.monster_list.clear()
-                self.player = None
-                self.monster = None
-                self.create_map(self.counter)
-                self.player.didKill = False
+                self.next_level()
             self.visible_sprites.custom_draw(self.player)
             self.visible_sprites.update()
             self.monster.update()
-            debug(self.player.didKill)
 
-
+    def next_level(self):
+        self.counter += 1
+        if self.counter == 4:
+            pygame.quit()
+            sys.exit()
+        self.visible_sprites.empty()
+        self.obstacles_sprites.empty()
+        self.monster_list.clear()
+        self.player = None
+        self.monster = None
+        self.create_map(self.counter)
+        self.player.didKill = False
 class YSortCameraGroup(pygame.sprite.Group):
     def __init__(self):
         super().__init__()

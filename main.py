@@ -38,15 +38,17 @@ class Game:
     def __init__(self):
         pygame.init()
         # Template Music
-        pygame.mixer.init()
+
         self.scroll = 0
+        pygame.mixer.init()
         music = pygame.mixer.music.load('funk.ogg')
         pygame.mixer.music.play(-1)
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
         pygame.display.set_caption('Boogie Bash')
         self.clock = pygame.time.Clock()
-
+        self.val = 0
         self.level = Level()
+
         self.menu = StartMenu()
 
     def display_ui(self):
@@ -54,13 +56,6 @@ class Game:
             img = pygame.image.load("Heart-Empty.png" if i >= self.level.player.curr_hp else "Heart.png")
             img = pygame.transform.scale(img, (50, 50))
             self.screen.blit(img, (i * 50 + HEIGHT / 4 - self.level.player.max_hp * 50, 20))
-
-    # Monster HP Display
-    #def display_mon_ui(self):
-    #    for i in range(self.level.monster.max_hp):
-    #        img = pygame.image.load("Heart-Empty.png" if i >= self.level.monster.max_hp else "Heart.png")
-    #        img = pygame.transform.scale(img, (20, 20))
-    #        self.screen.blit(img, (i * 50 + self.level.monster.pos[0] + self.level.monster.pos[1], 100))
 
     def run(self):
         while True:
@@ -82,6 +77,9 @@ class Game:
             self.screen.fill('white')
 
             if self.menu.active:
+                if self.val == 0:
+                    self.play_menu_music()
+                    self.val += 1
                 for i in range(0, tiles):
                     self.screen.blit(bg_image, (i * bg_width + self.scroll, 0))
                 self.scroll -= 1
@@ -90,10 +88,32 @@ class Game:
                 self.screen.blit(bg_text, (0, 0))
                 self.menu.draw(self.screen)
             else:
+                if self.level.m_val == 0:
+                    pygame.mixer.music.stop()
+                    pygame.mixer.music.load('funky.ogg')
+                    pygame.mixer.music.play()
+                    self.level.m_val = -1
                 self.level.run()
+                if self.level.player.curr_hp == 0:
+                    self.unload_level()
+                    self.level = Level()
                 self.display_ui()
             pygame.display.update()
             self.clock.tick(FPS)
+
+    def play_menu_music(self):
+        # put shit here MAN
+        pygame.mixer.music.load('funk.ogg')
+        pygame.mixer.music.play(-1)
+
+    def unload_level(self):
+        self.menu.active = True
+        self.level.visible_sprites.empty()
+        self.level.obstacles_sprites.empty()
+        self.level.monster_list.clear()
+        self.level.player = None
+        self.level.monster = None
+        self.val = 0
 
 
 if __name__ == '__main__':
