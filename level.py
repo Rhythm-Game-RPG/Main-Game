@@ -1,3 +1,5 @@
+import sys
+
 import pygame
 from settings import *
 from tile import Tile
@@ -20,15 +22,27 @@ class Level:
         # sprite group set up
         self.visible_sprites = YSortCameraGroup()
         self.obstacles_sprites = pygame.sprite.Group()
-
+        self.worlds = [LEVEL1, LEVEL2, LEVEL3, LEVEL4]
         self.monster_list = []
         # sprite set up
-        self.create_map()
+
+        self.counter = 0
+
+        self.create_map(self.counter)
 
         self.pause = Pause(self.player)
 
-    def create_map(self):
-        for row_index, row in enumerate(LEVEL1):
+    def create_map(self, x):
+        level = []
+        if self.counter == 0:
+            level = LEVEL1.copy()
+        elif self.counter == 1:
+            level = LEVEL2.copy()
+        elif self.counter == 2:
+            level = LEVEL3.copy()
+        elif self.counter == 3:
+            level = LEVEL4.copy()
+        for row_index, row in enumerate(level):
             for col_index, col in enumerate(row):
                 x = col_index * TILESIZE
                 y = row_index * TILESIZE
@@ -36,7 +50,7 @@ class Level:
                     Tile((x, y), [self.visible_sprites, self.obstacles_sprites])
                 if col == 'p':
                     self.player = Player((x, y), [self.visible_sprites], self.obstacles_sprites, self.monster_list)
-        for row_index, row in enumerate(LEVEL1):
+        for row_index, row in enumerate(level):
             for col_index, col in enumerate(row):
                 x = col_index * TILESIZE
                 y = row_index * TILESIZE
@@ -62,10 +76,23 @@ class Level:
             self.pause.display()
             # display pause menu
         else:
+            if self.player.didKill:
+                self.counter += 1
+                if self.counter == 4:
+                    pygame.quit()
+                    sys.exit()
+                self.visible_sprites.empty()
+                self.obstacles_sprites.empty()
+                self.monster_list.clear()
+                self.player = None
+                self.monster = None
+                self.create_map(self.counter)
+                self.player.didKill = False
             self.visible_sprites.custom_draw(self.player)
             self.visible_sprites.update()
             self.monster.update()
             debug(self.monster_list[0].status)
+
 
 
 class YSortCameraGroup(pygame.sprite.Group):
