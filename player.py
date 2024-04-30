@@ -65,7 +65,8 @@ class Player(pygame.sprite.Sprite):
     def move(self, speed):
 
         # Move counter can be BPM of Track
-        if self.move_counter >= 25 and (self.direction.x != 0 or self.direction.y != 0):
+        # The 25 needs to be the BPM Variable for each Track
+        if self.move_counter >= 31.5789 and (self.direction.x != 0 or self.direction.y != 0):
             # Every x frames, allow movement
             # Multiply hitbox x and y by the direction given from
             # input and the TILESIZE (in this case 64)
