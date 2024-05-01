@@ -10,7 +10,7 @@ class Player(pygame.sprite.Sprite):
     def __init__(self, pos, groups, obstacle_sprites, monster_list):
         super().__init__(groups)
         # always need this for any kind of sprite
-        self.image = pygame.image.load('player_left_knife.png').convert_alpha()
+        self.image = pygame.image.load('graphics/player_left_knife.png').convert_alpha()
         self.rect = self.image.get_rect(topleft=pos)
         self.pos = pos
         self.hitbox = self.rect
@@ -133,10 +133,10 @@ class Player(pygame.sprite.Sprite):
     def update(self):
         debug(self.curr_hp, 10, 10)
         if self.status == "right":
-            self.image = pygame.image.load('player_knife.png').convert_alpha()
+            self.image = pygame.image.load('graphics/player_knife.png').convert_alpha()
             #self.rect = self.image.get_rect(topleft=self.pos)
         elif self.status == "left":
-            self.image = pygame.image.load('player_left_knife.png').convert_alpha()
+            self.image = pygame.image.load('graphics/player_left_knife.png').convert_alpha()
             #self.rect = self.image.get_rect(topleft=self.pos)
         self.input()
         self.move(self.speed)
