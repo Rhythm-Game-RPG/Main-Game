@@ -7,7 +7,7 @@ class Monster(pygame.sprite.Sprite):
     def __init__(self, pos, groups, obstacle_sprites, player):
         super().__init__(groups)
         # always need this for any kind of sprite
-        self.image = pygame.image.load('graphics/slime.png').convert_alpha()
+        self.image = pygame.image.load('slime.png').convert_alpha()
         self.rect = self.image.get_rect(topleft=pos)
         self.pos = pos
         self.hitbox = self.rect
