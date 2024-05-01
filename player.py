@@ -30,6 +30,9 @@ class Player(pygame.sprite.Sprite):
         # graphics setup
         self.import_player_assets()
         self.mon_killed = False
+        self.target = None
+        self.monster_hit = False
+        self.attack_thrown = False
 
     def import_player_assets(self):
         character_path = "graphics/player/"
@@ -69,26 +72,21 @@ class Player(pygame.sprite.Sprite):
         debug(self.move_counter, 10, 10)
         self.mon_killed = False
         #
-        if self.move_counter >= (self.BPM - 2)  and self.move_counter <= (self.BPM) and (self.direction.x != 0 or self.direction.y != 0):
+        if self.move_counter >= (self.BPM - 10)  and self.move_counter <= (self.BPM) and (self.direction.x != 0 or self.direction.y != 0):
             # Every x frames, allow movement
             # Multiply hitbox x and y by the direction given from
             # input and the TILESIZE (in this case 64)
+            self.target = None
             for m in self.monster_list:
                 if ((self.pos[0] + self.direction.x) == m.pos[0]) and (self.pos[1] == m.pos[1]):
-                    m.curr_hp -= self.atk
+                    self.target = m
+                    self.attack_thrown = True
                     self.move_counter = 0
-                    if m.curr_hp == 0:
-                        self.kill_count += 1
-                        self.mon_killed = True
-                        if self.kill_count == len(self.monster_list):
-                            self.didKill = True
                     return
                 if (self.pos[0] == m.pos[0]) and ((self.pos[1] + self.direction.y) == m.pos[1]):
-                    if m.curr_hp == 0:
-                        self.kill_count += 1
-                        self.mon_killed = True
-                        if self.kill_count == len(self.monster_list):
-                            self.didKill = True
+                    self.target = m
+                    self.attack_thrown = True
+                    self.move_counter = 0
                     return
             self.hitbox.x += self.direction.x * TILESIZE
             self.collision('horizontal')
@@ -98,9 +96,23 @@ class Player(pygame.sprite.Sprite):
             self.move_counter = 0
             self.pos = (round(self.hitbox.x / 64), round(self.hitbox.y / 64))
         elif self.move_counter > self.BPM:
+            self.target = None
             self.move_counter = 0
         else:
             self.move_counter += 1
+
+    def attack(self):
+        self.didKill = False
+        if self.monster_hit == False and self.target and self.attack_thrown:
+            self.target.curr_hp -= self.atk
+            if self.target.alive == False:
+                        self.kill_count += 1
+                        self.mon_killed = True
+                        if self.kill_count == len(self.monster_list):
+                            self.didKill = True
+        self.monster_hit = False
+        self.target = None
+        self.attack_thrown = False
 
     def collision(self, direction):
         if direction == 'horizontal':
