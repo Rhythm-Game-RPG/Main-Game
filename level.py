@@ -96,6 +96,12 @@ class Level:
 
     def next_level(self):
         self.counter += 1
+        if self.counter == 1:
+            self.m_val = 1
+        elif self.counter == 2:
+            self.m_val = 2
+        elif self.counter == 3:
+            self.m_val = 3
         if self.counter == 4:
             pygame.quit()
             sys.exit()
