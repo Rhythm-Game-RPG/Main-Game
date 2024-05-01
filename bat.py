@@ -25,6 +25,8 @@ class Bat(Monster):
         self.max_hp = 1
         self.curr_hp = 1
         self.atk = 1
+        self.idle_frame = 0
+        self.idle = False
 
         # graphics setup
         self.import_monster_assets()
@@ -98,7 +100,13 @@ class Bat(Monster):
     def move(self, speed):
 
         # Move counter can be BPM of Track
-        if self.move_counter >= 50:
+        if self.move_counter >= 30:
+            if self.idle_frame == 0:
+                self.image = pygame.image.load('graphics/batIdleTwo.png').convert_alpha()
+                self.idle_frame = 1
+            else:
+                self.image = pygame.image.load('graphics/bat.png').convert_alpha()
+                self.idle_frame = 0
             noAttack = True
             # Every x frames, allow movement
             # Multiply hitbox x and y by the direction given from

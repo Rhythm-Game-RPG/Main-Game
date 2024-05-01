@@ -74,10 +74,10 @@ class Slime(Monster):
         if self.move_counter >= 30:
             noAttack = True
             if(self.idle_frame == 0):
-                self.image = pygame.image.load('slimeIdleTwo.png').convert_alpha()
+                self.image = pygame.image.load('graphics/slimeIdleTwo.png').convert_alpha()
                 self.idle_frame = 1
             else:
-                self.image = pygame.image.load('slime.png').convert_alpha()
+                self.image = pygame.image.load('graphics/slime.png').convert_alpha()
                 self.idle_frame = 0
             if self.idle:
                 self.idle = False
@@ -91,7 +91,7 @@ class Slime(Monster):
             if self.direction.y == 0:
                 if (self.player.pos[0] == (self.pos[0] + self.direction.x)) and (self.player.pos[1] == self.pos[1]):
                     self.player.curr_hp -= self.atk
-                    self.image = pygame.image.load('slimeAttack.png').convert_alpha()
+                    self.image = pygame.image.load('graphics/slimeAttack.png').convert_alpha()
                     self.idle = True
                     self.idle_frame = 1
                     noAttack = False
@@ -102,7 +102,7 @@ class Slime(Monster):
             if self.direction.x == 0:
                 if (self.player.pos[0] == self.pos[0]) and (self.player.pos[1] == (self.pos[1] + self.direction.y)):
                     self.player.curr_hp -= self.atk
-                    self.image = pygame.image.load('slimeAttack.png').convert_alpha()
+                    self.image = pygame.image.load('graphics/slimeAttack.png').convert_alpha()
                     self.idle = True
                     self.idle_frame = 1
                     noAttack = False
@@ -150,9 +150,9 @@ class Slime(Monster):
         if self.curr_hp < 1:
             self.alive = False
             self.idle = True
-            self.image = pygame.image.load('slimeDeath.png').convert_alpha()
+            self.image = pygame.image.load('graphics/slimeDeath.png').convert_alpha()
         else:
-            self.image = pygame.image.load('slimeTakeDamage.png').convert_alpha()
+            self.image = pygame.image.load('graphics/slimeTakeDamage.png').convert_alpha()
         
 
     def checkStatus(self):
