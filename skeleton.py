@@ -8,7 +8,7 @@ class Skeleton(Monster):
     def __init__(self, pos, groups, obstacle_sprites, player):
         super().__init__(pos, groups, obstacle_sprites, player)
         # always need this for any kind of sprite
-        self.image = pygame.image.load('skeleton.png').convert_alpha()
+        self.image = pygame.image.load('graphics/skeleton.png').convert_alpha()
         self.rect = self.image.get_rect(topleft=pos)
         self.pos = pos
         self.hitbox = self.rect
