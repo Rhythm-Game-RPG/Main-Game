@@ -69,7 +69,7 @@ class Player(pygame.sprite.Sprite):
                 self.direction.x = 0
 
     def move(self, speed):
-        debug(self.move_counter, 10, 10)
+        debug(self.kill_count, 10, 10)
         self.mon_killed = False
         #
         if self.move_counter >= (self.BPM - 10)  and self.move_counter <= (self.BPM) and (self.direction.x != 0 or self.direction.y != 0):
@@ -102,9 +102,9 @@ class Player(pygame.sprite.Sprite):
             self.move_counter += 1
 
     def attack(self):
-        self.didKill = False
         if self.monster_hit == False and self.target and self.attack_thrown:
             self.target.curr_hp -= self.atk
+            self.target.checkStatus()
             if self.target.alive == False:
                         self.kill_count += 1
                         self.mon_killed = True
