@@ -16,7 +16,7 @@ class Slime(Monster):
         self.patrol = 0
         self.direction = pygame.math.Vector2()
         self.status = "patrol"
-        self.patrol_length = 4
+        self.patrol_length = 8
         self.speed = 5
         self.obstacle_sprites = obstacle_sprites
         self.alive = True
@@ -24,6 +24,8 @@ class Slime(Monster):
         self.max_hp = 2
         self.curr_hp = 2
         self.atk = 1
+        self.idle_frame = 0
+        self.idle = False
 
         # graphics setup
         self.import_monster_assets()
@@ -50,25 +52,48 @@ class Slime(Monster):
             case 0:
                 self.direction.y = -1
             case 1:
-                self.direction.x = 1
+                self.direction.y = 0
             case 2:
-                self.direction.y = 1
+                self.direction.x = 1
             case 3:
+                self.direction.x = 0
+            case 4:
+                self.direction.y = 1
+            case 5:
+                self.direction.y = 0
+            case 6:
                 self.direction.x = -1
+            case 7:
+                self.direction.x = 0
         
         
 
     def move(self, speed):
 
         # Move counter can be BPM of Track
-        if self.move_counter >= 100:
+        if self.move_counter >= 30:
             noAttack = True
+            if(self.idle_frame == 0):
+                self.image = pygame.image.load('slimeIdleTwo.png').convert_alpha()
+                self.idle_frame = 1
+            else:
+                self.image = pygame.image.load('slime.png').convert_alpha()
+                self.idle_frame = 0
+            if self.idle:
+                self.idle = False
+                self.move_counter = 0
+                if self.alive == False:
+                    self.checkStatus()
+                return
             # Every x frames, allow movement
             # Multiply hitbox x and y by the direction given from
             # input and the TILESIZE (in this case 64)
             if self.direction.y == 0:
                 if (self.player.pos[0] == (self.pos[0] + self.direction.x)) and (self.player.pos[1] == self.pos[1]):
                     self.player.curr_hp -= self.atk
+                    self.image = pygame.image.load('slimeAttack.png').convert_alpha()
+                    self.idle = True
+                    self.idle_frame = 1
                     noAttack = False
                 else:
                     self.hitbox.x += self.direction.x * TILESIZE
@@ -77,6 +102,9 @@ class Slime(Monster):
             if self.direction.x == 0:
                 if (self.player.pos[0] == self.pos[0]) and (self.player.pos[1] == (self.pos[1] + self.direction.y)):
                     self.player.curr_hp -= self.atk
+                    self.image = pygame.image.load('slimeAttack.png').convert_alpha()
+                    self.idle = True
+                    self.idle_frame = 1
                     noAttack = False
                 else:
                     self.hitbox.y += self.direction.y * TILESIZE
@@ -117,9 +145,18 @@ class Slime(Monster):
                 if self.direction.y > 0:  # moving left
                     self.hitbox.bottom = self.player.hitbox.top
 
-    def checkStatus(self):
+    def takeDamage(self):
+        self.idle = True
         if self.curr_hp < 1:
             self.alive = False
+            self.idle = True
+            self.image = pygame.image.load('slimeDeath.png').convert_alpha()
+        else:
+            self.image = pygame.image.load('slimeTakeDamage.png').convert_alpha()
+        
+
+    def checkStatus(self):
+        if self.alive == False:
             self.hitbox.x += 100 * TILESIZE
             self.hitbox.y += 100 * TILESIZE
             self.pos = (round(self.hitbox.x / 64), round(self.hitbox.y / 64))
@@ -128,5 +165,5 @@ class Slime(Monster):
     def update(self):
         self.pathfind()
         self.move(self.speed)
-        self.checkStatus()
+        
 

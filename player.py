@@ -104,7 +104,7 @@ class Player(pygame.sprite.Sprite):
     def attack(self):
         if self.monster_hit == False and self.target and self.attack_thrown:
             self.target.curr_hp -= self.atk
-            self.target.checkStatus()
+            self.target.takeDamage()
             if self.target.alive == False:
                         self.kill_count += 1
                         self.mon_killed = True
