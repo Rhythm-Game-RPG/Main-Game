@@ -4,7 +4,9 @@ import level
 from settings import *
 from debug import *
 from level import *
-#from support import import_folder
+
+
+# from support import import_folder
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos, groups, obstacle_sprites, monster_list):
@@ -69,10 +71,10 @@ class Player(pygame.sprite.Sprite):
                 self.direction.x = 0
 
     def move(self, speed):
-        debug(self.kill_count, 10, 10)
         self.mon_killed = False
         #
-        if self.move_counter >= (self.BPM - 10)  and self.move_counter <= (self.BPM) and (self.direction.x != 0 or self.direction.y != 0):
+        if self.move_counter >= (self.BPM - 10) and self.move_counter <= (self.BPM) and (
+                self.direction.x != 0 or self.direction.y != 0):
             # Every x frames, allow movement
             # Multiply hitbox x and y by the direction given from
             # input and the TILESIZE (in this case 64)
@@ -106,10 +108,10 @@ class Player(pygame.sprite.Sprite):
             self.target.curr_hp -= self.atk
             self.target.checkStatus()
             if self.target.alive == False:
-                        self.kill_count += 1
-                        self.mon_killed = True
-                        if self.kill_count == len(self.monster_list):
-                            self.didKill = True
+                self.kill_count += 1
+                self.mon_killed = True
+                if self.kill_count == len(self.monster_list):
+                    self.didKill = True
         self.monster_hit = False
         self.target = None
         self.attack_thrown = False
@@ -146,9 +148,9 @@ class Player(pygame.sprite.Sprite):
         debug(self.curr_hp, 10, 10)
         if self.status == "right":
             self.image = pygame.image.load('player_knife.png').convert_alpha()
-            #self.rect = self.image.get_rect(topleft=self.pos)
+            # self.rect = self.image.get_rect(topleft=self.pos)
         elif self.status == "left":
             self.image = pygame.image.load('player_left_knife.png').convert_alpha()
-            #self.rect = self.image.get_rect(topleft=self.pos)
+            # self.rect = self.image.get_rect(topleft=self.pos)
         self.input()
         self.move(self.speed)
