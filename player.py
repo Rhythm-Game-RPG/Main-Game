@@ -82,11 +82,19 @@ class Player(pygame.sprite.Sprite):
             self.target = None
             for m in self.monster_list:
                 if ((self.pos[0] + self.direction.x) == m.pos[0]) and (self.pos[1] == m.pos[1]):
+                    if self.direction.x == 1:
+                        self.image = pygame.image.load('graphics/player_attack_right.png').convert_alpha()
+                    else:
+                        self.image = pygame.image.load('graphics/player_attack_left.png').convert_alpha()
                     self.target = m
                     self.attack_thrown = True
                     self.move_counter = 0
                     return
                 if (self.pos[0] == m.pos[0]) and ((self.pos[1] + self.direction.y) == m.pos[1]):
+                    if self.direction.y == 1:
+                        self.image = pygame.image.load('graphics/player_attack_down.png').convert_alpha()
+                    else:
+                        self.image = pygame.image.load('graphics/player_attack_up.png').convert_alpha()
                     self.target = m
                     self.attack_thrown = True
                     self.move_counter = 0
