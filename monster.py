@@ -23,6 +23,7 @@ class Monster(pygame.sprite.Sprite):
         self.max_hp = 1
         self.curr_hp = 1
         self.atk = 1
+        self.counted = False
 
         # graphics setup
         self.import_monster_assets()

@@ -217,8 +217,7 @@ class Game:
                             pygame.quit()
                             sys.exit()
 
-            self.screen.fill('white'
-                             '')
+            self.screen.fill('black')
 
             if self.menu.active:
                 if self.val == 0:
