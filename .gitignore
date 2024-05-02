@@ -1,0 +1,12 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs/Main-Game/FileContentIndex/43900cd3-e43a-4275-8d76-e158a00cf54c.vsidx
+/.vs/Main-Game/FileContentIndex/abd7b831-0812-4c21-ae47-137b281c47d6.vsidx
+/chest.py
+/player.py
+/settings.py
+/main.py
+/level.py
+/.vs/slnx.sqlite
