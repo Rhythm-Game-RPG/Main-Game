@@ -164,7 +164,7 @@ class Game:
                             pygame.quit()
                             sys.exit()
 
-            self.screen.fill('black'
+            self.screen.fill('white'
                              '')
 
             if self.menu.active:
@@ -190,13 +190,11 @@ class Game:
                 if self.level.m_val == 0:
                     pygame.mixer.music.stop()
                     pygame.mixer.music.load('level1track.ogg')
-                    pygame.mixer.music.play(-1, 1)
+                    pygame.mixer.music.play(-1, 5)
                     self.level.m_val = -1
                 elif self.level.m_val == 1:
-                    pygame.mixer.music.stop()
-                    pygame.mixer.music.load('level2.ogg')
-                    pygame.mixer.music.play(-1)
-                    self.level.m_val = -1
+                    continue
+                    # play level 2 track
                 elif self.level.m_val == 2:
                     continue
                     # play level 3 track

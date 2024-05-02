@@ -12,7 +12,7 @@ from slime import Slime
 from skeleton import Skeleton
 from bat import Bat
 from minotaur import Minotaur
-from ghost import Ghost
+from chest import Chest
 
 
 class Level:
@@ -46,6 +46,8 @@ class Level:
             level = LEVEL3.copy()
         elif self.counter == 3:
             level = LEVEL4.copy()
+        
+        place_chest(level)  # Randomly place the chest on the map
 
         for row_index, row in enumerate(level):
             for col_index, col in enumerate(row):
@@ -59,8 +61,15 @@ class Level:
                 y = row_index * TILESIZE
                 if col == 'x':
                     Tile((x, y), [self.visible_sprites, self.obstacles_sprites])
+                if col == 'c':
+                    self.chest = Chest((x, y), [self.visible_sprites, self.obstacles_sprites])
+        for row_index, row in enumerate(level):
+            for col_index, col in enumerate(row):
+                x = col_index * TILESIZE
+                y = row_index * TILESIZE
                 if col == 'p':
-                    self.player = Player((x, y), [self.visible_sprites], self.obstacles_sprites, self.monster_list)
+                    self.player = Player((x, y), [self.visible_sprites], self.obstacles_sprites, self.monster_list, self.chest)
+
         for row_index, row in enumerate(level):
             for col_index, col in enumerate(row):
                 x = col_index * TILESIZE
@@ -76,9 +85,6 @@ class Level:
                     self.player.monster_list.append(self.monster)
                 if col == 'b':
                     self.monster = (Bat((x, y), [self.visible_sprites], self.obstacles_sprites, self.player))
-                    self.player.monster_list.append(self.monster)
-                if col == 'g':
-                    self.monster = (Ghost((x, y), [self.visible_sprites], self.obstacles_sprites, self.player))
                     self.player.monster_list.append(self.monster)
 
     def toggle_menu(self):
@@ -96,16 +102,9 @@ class Level:
             self.visible_sprites.custom_draw(self.player)
             self.visible_sprites.update()
             self.monster.update()
-            self.player.attack()
 
     def next_level(self):
         self.counter += 1
-        if self.counter == 1:
-            self.m_val = 1
-        elif self.counter == 2:
-            self.m_val = 2
-        elif self.counter == 3:
-            self.m_val = 3
         if self.counter == 4:
             pygame.quit()
             sys.exit()
