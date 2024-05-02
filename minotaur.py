@@ -51,12 +51,12 @@ class Minotaur(Monster):
                 self.status = "wakeup"
             else:
                 if self.idle_frame == 0:
-                self.image = pygame.image.load('graphics/minotaur_Sleep_One.png').convert_alpha()
-                self.idle_frame = 1
-            else:
-                self.image = pygame.image.load('graphics/minotaur_Sleep_Two.png').convert_alpha()
-                self.idle_frame = 0
-                #Lets add a waking up effect here
+                    self.image = pygame.image.load('graphics/minotaur_Sleep_One.png').convert_alpha()
+                    self.idle_frame = 1
+                else:
+                    self.image = pygame.image.load('graphics/minotaur_Sleep_Two.png').convert_alpha()
+                    self.idle_frame = 0
+                    #Lets add a waking up effect here
 
     def pursue(self):
         self.direction = pygame.math.Vector2(0, 0)
@@ -224,7 +224,7 @@ class Minotaur(Monster):
             self.idle = True
             self.image = pygame.image.load('graphics/minotaur_Death.png').convert_alpha()
         else:
-            if self.status = "dizzy"
+            if self.status == "dizzy":
                 self.image = pygame.image.load('graphics/minotaur_Dizzy_Damage.png').convert_alpha()
             else:
                 self.image = pygame.image.load('graphics/minotaur_Take_Damage.png').convert_alpha()
