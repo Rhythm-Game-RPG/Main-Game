@@ -102,6 +102,7 @@ class Level:
             self.visible_sprites.custom_draw(self.player)
             self.visible_sprites.update()
             self.monster.update()
+            self.player.attack()
 
     def next_level(self):
         self.counter += 1

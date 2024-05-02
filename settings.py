@@ -9,7 +9,7 @@ FPS = 60
 TILESIZE = 64
 bg_image = pygame.image.load("pixel_space.png")
 bg_text = pygame.image.load("boogie_logo.png")
-bg_player = pygame.image.load("player.png")
+bg_player = pygame.image.load("graphics/player.png")
 bg_width = bg_image.get_width()
 bg_rect = bg_image.get_rect()
 
