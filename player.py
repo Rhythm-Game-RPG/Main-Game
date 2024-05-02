@@ -1,9 +1,9 @@
 import pygame
-
-import level
+from chest import Chest
 from settings import *
 from debug import *
-from level import *
+import random
+#from level import *
 
 
 # from support import import_folder
@@ -36,6 +36,8 @@ class Player(pygame.sprite.Sprite):
         self.monster_hit = False
         self.attack_thrown = False
         self.chest = chest
+        self.hp_up = False
+        self.attack_up = False
 
     def import_player_assets(self):
         character_path = "graphics/player/"
@@ -130,6 +132,18 @@ class Player(pygame.sprite.Sprite):
         if direction == 'horizontal':
             for sprite in self.obstacle_sprites:
                 if sprite.hitbox.colliderect(self.hitbox):
+                    if type(sprite) is Chest:
+                        sprite.image = pygame.image.load('graphics/ChestOpen.png').convert_alpha()
+                        sprite.image = pygame.transform.scale(sprite.image, (64, 64))
+                        val = random.randint(1, 2)
+                        if val == 1:
+                            if self.curr_hp < 3 and self.curr_hp > 0:
+                                self.curr_hp += 1
+                                self.hp_up = True
+                        elif val == 2:
+                            if self.atk == 1:
+                                self.atk += 1
+                                self.attack_up = True
                     if self.direction.x > 0:  # moving right
                         self.hitbox.right = sprite.hitbox.left
                     if self.direction.x < 0:  # moving left
@@ -143,6 +157,18 @@ class Player(pygame.sprite.Sprite):
         if direction == 'vertical':
             for sprite in self.obstacle_sprites:
                 if sprite.hitbox.colliderect(self.hitbox):
+                    if type(sprite) is Chest:
+                        sprite.image = pygame.image.load('graphics/ChestOpen.png').convert_alpha()
+                        sprite.image = pygame.transform.scale(sprite.image, (64, 64))
+                        val = random.randint(1, 2)
+                        if val == 1:
+                            if self.curr_hp < 3 and self.curr_hp > 0:
+                                self.curr_hp += 1
+                                self.hp_up = True
+                        elif val == 2:
+                            if self.atk == 1:
+                                self.atk += 1
+                                self.attack_up = True
                     if self.direction.y < 0:  # moving up
                         self.hitbox.top = sprite.hitbox.bottom
                     if self.direction.y > 0:  # moving down

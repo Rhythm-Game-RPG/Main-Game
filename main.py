@@ -126,6 +126,7 @@ class Game:
     def __init__(self):
         pygame.init()
         self.font = pygame.font.Font(None, 36)
+        self.atk_font = pygame.font.Font(None, 65)
         # Template Music
         self.sprites = []
         self.sprites.append(pygame.image.load('m_idle.png'))
@@ -160,6 +161,7 @@ class Game:
         self.mon_left = len(self.level.player.monster_list)
         self.k_count = self.level.player.kill_count
         self.win_was_active = False
+        self.announcement_counter = 0
 
     def display_ui(self):
         pic = pygame.image.load("health-cover.png")
@@ -295,6 +297,20 @@ class Game:
                     self.level = Level()
                     self.mon_left = len(self.level.player.monster_list)
                 self.display_ui()
+                if self.level.player.attack_up:
+                    text = "Attack Increased to 2!"
+                    announce_text = self.atk_font.render(text, True, (255, 255, 255))
+                    self.screen.blit(announce_text, (270, 300))
+                    self.announcement_counter += 1
+                    if self.announcement_counter >= 60:
+                        self.level.player.attack_up = False
+                if self.level.player.hp_up:
+                    text = "HP Increased!"
+                    announce_text = self.atk_font.render(text, True, (255, 255, 255))
+                    self.screen.blit(announce_text, (270, 300))
+                    self.announcement_counter += 1
+                    if self.announcement_counter >= 60:
+                        self.level.player.hp_up = False
             pygame.display.update()
             self.clock.tick(FPS)
 
@@ -310,6 +326,7 @@ class Game:
         self.level.monster_list.clear()
         self.level.player = None
         self.level.monster = None
+        self.level.chest = None
         self.val = 0
 
 

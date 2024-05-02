@@ -48,7 +48,6 @@ class Level:
         elif self.counter == 3:
             level = LEVEL4.copy()
         
-        place_chest(level)  # Randomly place the chest on the map
 
         for row_index, row in enumerate(level):
             for col_index, col in enumerate(row):
@@ -126,6 +125,7 @@ class Level:
         self.monster_list.clear()
         self.player = None
         self.monster = None
+        self.chest = None
         self.create_map(self.counter)
         self.player.didKill = False
         self.moved_level = True
