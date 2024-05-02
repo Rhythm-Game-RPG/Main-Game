@@ -26,6 +26,7 @@ class Level:
         self.obstacles_sprites = pygame.sprite.Group()
         self.worlds = [LEVEL1, LEVEL2, LEVEL3, LEVEL4]
         self.monster_list = []
+        self.kill_count = 0
         # sprite set up
 
         self.counter = 0
@@ -97,18 +98,29 @@ class Level:
         else:
             if self.player.didKill:
                 var = self.player.curr_hp
-                self.next_level()
+                self.counter += 1
+                self.next_level(self.counter)
+                if self.player.Win:
+                    return
                 self.player.curr_hp = var
+
             self.visible_sprites.custom_draw(self.player)
             self.visible_sprites.update()
             self.monster.update()
             self.player.attack()
+            self.kill_count = self.player.kill_count
 
-    def next_level(self):
-        self.counter += 1
-        if self.counter == 4:
-            pygame.quit()
-            sys.exit()
+
+    def next_level(self, counter):
+        if counter == 1:
+            self.m_val = 1
+        elif counter == 2:
+            self.m_val = 2
+        elif counter == 3:
+            self.m_val = 3
+        if counter >= 4:
+            self.player.Win = True
+            return
         self.visible_sprites.empty()
         self.obstacles_sprites.empty()
         self.monster_list.clear()
