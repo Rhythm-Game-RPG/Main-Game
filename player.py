@@ -181,7 +181,6 @@ class Player(pygame.sprite.Sprite):
                         self.hitbox.bottom = monster.hitbox.top
 
     def update(self):
-        debug(self.curr_hp, 10, 10)
         if self.status == "right":
             self.image = pygame.image.load('graphics/player_knife.png').convert_alpha()
             #self.rect = self.image.get_rect(topleft=self.pos)

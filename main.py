@@ -240,7 +240,6 @@ class Game:
                 self.win_screen.draw(self.screen, self.mon_killed, self.save_hp)
 
             else:
-                debug(self.level.counter, 10, 500)
                 if self.level.moved_level:
                     self.mon_left = len(self.level.player.monster_list)
                     self.level.moved_level = False
@@ -275,7 +274,7 @@ class Game:
                 self.level.run()
                 if self.level.player.Win:
                     self.save_hp = self.level.player.curr_hp
-                    self.mon_killed = self.level.kill_count
+                    # self.mon_killed = self.level.kill_count
                     self.unload_level()
                     pygame.mixer.music.stop()
                     pygame.mixer.music.load("menu.ogg")
@@ -286,9 +285,10 @@ class Game:
                 self.BoogieBar()
                 if self.level.player.mon_killed:
                     self.mon_left -= 1
+                    self.mon_killed += 1
 
                 if self.level.player.curr_hp <= 0:
-                    self.mon_killed = self.level.kill_count
+                    # self.mon_killed = self.level.kill_count
                     self.unload_level()
                     pygame.mixer.music.stop()
                     pygame.mixer.music.load('death.ogg')
