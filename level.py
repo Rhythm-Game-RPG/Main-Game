@@ -12,6 +12,7 @@ from slime import Slime
 from skeleton import Skeleton
 from bat import Bat
 from minotaur import Minotaur
+from ghost import Ghost
 
 
 class Level:
@@ -75,6 +76,9 @@ class Level:
                     self.player.monster_list.append(self.monster)
                 if col == 'b':
                     self.monster = (Bat((x, y), [self.visible_sprites], self.obstacles_sprites, self.player))
+                    self.player.monster_list.append(self.monster)
+                if col == 'g':
+                    self.monster = (Ghost((x, y), [self.visible_sprites], self.obstacles_sprites, self.player))
                     self.player.monster_list.append(self.monster)
 
     def toggle_menu(self):
