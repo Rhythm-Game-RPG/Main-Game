@@ -12,6 +12,7 @@ from slime import Slime
 from skeleton import Skeleton
 from bat import Bat
 from minotaur import Minotaur
+from chest import Chest
 
 
 class Level:
@@ -46,6 +47,8 @@ class Level:
             level = LEVEL3.copy()
         elif self.counter == 3:
             level = LEVEL4.copy()
+        
+        place_chest(level)  # Randomly place the chest on the map
 
         for row_index, row in enumerate(level):
             for col_index, col in enumerate(row):
@@ -59,8 +62,15 @@ class Level:
                 y = row_index * TILESIZE
                 if col == 'x':
                     Tile((x, y), [self.visible_sprites, self.obstacles_sprites])
+                if col == 'c':
+                    self.chest = Chest((x, y), [self.visible_sprites, self.obstacles_sprites])
+        for row_index, row in enumerate(level):
+            for col_index, col in enumerate(row):
+                x = col_index * TILESIZE
+                y = row_index * TILESIZE
                 if col == 'p':
-                    self.player = Player((x, y), [self.visible_sprites], self.obstacles_sprites, self.monster_list)
+                    self.player = Player((x, y), [self.visible_sprites], self.obstacles_sprites, self.monster_list, self.chest)
+
         for row_index, row in enumerate(level):
             for col_index, col in enumerate(row):
                 x = col_index * TILESIZE
@@ -99,6 +109,7 @@ class Level:
             self.monster.update()
             self.player.attack()
             self.kill_count = self.player.kill_count
+
 
     def next_level(self, counter):
         if counter == 1:

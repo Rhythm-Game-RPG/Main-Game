@@ -9,10 +9,10 @@ from level import *
 # from support import import_folder
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, pos, groups, obstacle_sprites, monster_list):
+    def __init__(self, pos, groups, obstacle_sprites, monster_list, chest):
         super().__init__(groups)
         # always need this for any kind of sprite
-        self.image = pygame.image.load('player_left_knife.png').convert_alpha()
+        self.image = pygame.image.load('graphics/player_left_knife.png').convert_alpha()
         self.rect = self.image.get_rect(topleft=pos)
         self.pos = pos
         self.hitbox = self.rect
@@ -35,6 +35,7 @@ class Player(pygame.sprite.Sprite):
         self.target = None
         self.monster_hit = False
         self.attack_thrown = False
+        self.chest = chest
 
     def import_player_assets(self):
         character_path = "graphics/player/"
@@ -106,7 +107,7 @@ class Player(pygame.sprite.Sprite):
     def attack(self):
         if self.monster_hit == False and self.target and self.attack_thrown:
             self.target.curr_hp -= self.atk
-            self.target.checkStatus()
+            self.target.takeDamage()
             if self.target.alive == False:
                 self.kill_count += 1
                 self.mon_killed = True
@@ -147,10 +148,10 @@ class Player(pygame.sprite.Sprite):
     def update(self):
         debug(self.curr_hp, 10, 10)
         if self.status == "right":
-            self.image = pygame.image.load('player_knife.png').convert_alpha()
-            # self.rect = self.image.get_rect(topleft=self.pos)
+            self.image = pygame.image.load('graphics/player_knife.png').convert_alpha()
+            #self.rect = self.image.get_rect(topleft=self.pos)
         elif self.status == "left":
-            self.image = pygame.image.load('player_left_knife.png').convert_alpha()
-            # self.rect = self.image.get_rect(topleft=self.pos)
+            self.image = pygame.image.load('graphics/player_left_knife.png').convert_alpha()
+            #self.rect = self.image.get_rect(topleft=self.pos)
         self.input()
-        self.move(self.speed)
+        self.move(self.speed)    

@@ -8,7 +8,7 @@ class Bat(Monster):
     def __init__(self, pos, groups, obstacle_sprites, player):
         super().__init__(pos, groups, obstacle_sprites, player)
         # always need this for any kind of sprite
-        self.image = pygame.image.load('bat.png').convert_alpha()
+        self.image = pygame.image.load('graphics/bat.png').convert_alpha()
         self.rect = self.image.get_rect(topleft=pos)
         self.pos = pos
         self.hitbox = self.rect
@@ -25,6 +25,8 @@ class Bat(Monster):
         self.max_hp = 1
         self.curr_hp = 1
         self.atk = 1
+        self.idle_frame = 0
+        self.idle = False
 
         # graphics setup
         self.import_monster_assets()
@@ -98,7 +100,19 @@ class Bat(Monster):
     def move(self, speed):
 
         # Move counter can be BPM of Track
-        if self.move_counter >= 50:
+        if self.move_counter >= 30:
+            if self.idle_frame == 0:
+                self.image = pygame.image.load('graphics/batIdleTwo.png').convert_alpha()
+                self.idle_frame = 1
+            else:
+                self.image = pygame.image.load('graphics/bat.png').convert_alpha()
+                self.idle_frame = 0
+            if self.idle:
+                self.idle = False
+                self.move_counter = 0
+                if self.alive == False:
+                    self.checkStatus()
+                return
             noAttack = True
             # Every x frames, allow movement
             # Multiply hitbox x and y by the direction given from
@@ -107,10 +121,13 @@ class Bat(Monster):
                 if (self.player.pos[0] == (self.pos[0] + self.direction.x)) and (self.player.pos[1] == self.pos[1]):
                     if self.status == "idle":
                         self.player.curr_hp -= self.atk
+                        self.image = pygame.image.load('graphics/batAttackTwo.png').convert_alpha()
+                        self.idle = True
                         noAttack = False
                         self.status = "pursue"
                     else:
                         self.status = "idle"
+                        self.image = pygame.image.load('graphics/batAttack.png').convert_alpha()
                 else:
                     self.hitbox.x += self.direction.x * TILESIZE
                     self.collision('horizontal')
@@ -119,10 +136,13 @@ class Bat(Monster):
                 if (self.player.pos[0] == self.pos[0]) and (self.player.pos[1] == (self.pos[1] + self.direction.y)):
                     if self.status == "idle":
                         self.player.curr_hp -= self.atk
+                        self.image = pygame.image.load('graphics/batAttackTwo.png').convert_alpha()
+                        self.idle = True
                         noAttack = False
                         self.status = "pursue"
                     else:
                         self.status = "idle"
+                        self.image = pygame.image.load('graphics/batAttack.png').convert_alpha()
                 else:
                     self.hitbox.y += self.direction.y * TILESIZE
                     self.collision('vertical')
@@ -162,9 +182,18 @@ class Bat(Monster):
                 if self.direction.y > 0:  # moving left
                     self.hitbox.bottom = self.player.hitbox.top
 
-    def checkStatus(self):
+    def takeDamage(self):
+        self.idle = True
         if self.curr_hp < 1:
             self.alive = False
+            self.idle = True
+            self.image = pygame.image.load('graphics/batDeath.png').convert_alpha()
+        else:
+            self.image = pygame.image.load('graphics/batDeath.png').convert_alpha()
+        
+
+    def checkStatus(self):
+        if self.alive == False:
             self.hitbox.x += 100 * TILESIZE
             self.hitbox.y += 100 * TILESIZE
             self.pos = (round(self.hitbox.x / 64), round(self.hitbox.y / 64))
@@ -176,7 +205,6 @@ class Bat(Monster):
             if (self.status == "pursue") or (self.status == "moveX") or (self.status == "moveY"):
                 self.pursue()
         self.move(self.speed)
-        self.checkStatus()
 
 
 
